@@ -59,3 +59,14 @@ def update_port_map_temp(_id, appliance_type_id='', dev_mode_property_set_id='',
 def delete_port_map_temp(_id):
     url = '/%s' % str(_id)
     return _create_req(method=tools.HTTP_DELETE, url=url)
+
+
+if __name__ == '__main__':
+    print get_all_port_map_temp_by_at(0)
+    print '----'
+
+    print get_all_port_map_temp_by_dev(0)
+    print '----'
+
+    print get_port_map_temp(0)
+    print '----'
