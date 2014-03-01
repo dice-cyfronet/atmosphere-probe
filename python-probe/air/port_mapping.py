@@ -2,11 +2,11 @@ from air import tools
 
 __author__ = 'paoolo'
 
-APP_SET = '/port_mappings'
+PREFIX = '/port_mappings'
 
 
 def _create_req(method=tools.HTTP_GET, url='', body=None):
-    return tools.create_req(method, APP_SET + url, body)
+    return tools.create_req(method, PREFIX + url, body)
 
 
 @tools.catch_exception

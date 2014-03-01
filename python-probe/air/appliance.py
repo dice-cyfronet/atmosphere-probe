@@ -6,11 +6,11 @@ from air import appliance_sets
 
 __author__ = 'paoolo'
 
-APP = '/appliances'
+PREFIX = '/appliances'
 
 
 def _create_req(method=tools.HTTP_GET, url='', body=None):
-    return tools.create_req(method, APP + url, body)
+    return tools.create_req(method, PREFIX + url, body)
 
 
 @tools.catch_exception
