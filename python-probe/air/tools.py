@@ -1,7 +1,9 @@
 import httplib
 import simplejson
 import traceback
+
 import config
+
 
 __author__ = 'paoolo'
 
@@ -21,9 +23,12 @@ def catch_exception(func):
     return inner_func
 
 
-def create_req(method, url, body=None):
-    connection = httplib.HTTPSConnection(config.URL)
-    connection.request(method, config.PREFIX + url, body, headers={'PRIVATE-TOKEN': config.PRIVATE_TOKEN})
+def create_req(method, url, body=None, headers=None):
+    if not headers:
+        headers = {}
+    connection = httplib.HTTPConnection(config.URL)
+    headers['PRIVATE-TOKEN'] = config.PRIVATE_TOKEN
+    connection.request(method, config.PREFIX + url, body, headers=headers)
     response = connection.getresponse()
     content = response.read()
     data = simplejson.loads(content)

@@ -1,12 +1,15 @@
+import simplejson
+
 from air import tools
+
 
 __author__ = 'paoolo'
 
 PREFIX = '/endpoints'
 
 
-def _create_req(method=tools.HTTP_GET, url='', body=None):
-    return tools.create_req(method, PREFIX + url, body)
+def _create_req(method=tools.HTTP_GET, url='', body=None, headers=None):
+    return tools.create_req(method, PREFIX + url, body, headers)
 
 
 @tools.catch_exception
@@ -21,21 +24,48 @@ def get_endpoint(_id):
 
 
 @tools.catch_exception
-def create_endpoint(port_mapping_template_id, name, endpoint_type, invocation_path,
-                    description='', descriptor=''):
-    url = '?port_mapping_template_id=%s&name=%s&endpoint_type=%s&invocation_path=%s&description=%s&descriptor=%s' % \
-          (str(port_mapping_template_id), str(name), str(endpoint_type), str(invocation_path),
-           str(description), str(descriptor))
-    return _create_req(method=tools.HTTP_POST, url=url)
+def create_endpoint(port_mapping_template_id, name=None,
+                    description=None, descriptor=None,
+                    endpoint_type=None, invocation_path=None):
+    _data = {'port_mapping_template_id': port_mapping_template_id}
+    if name is not None:
+        _data['name'] = name
+    if description is not None:
+        _data['description'] = description
+    if descriptor is not None:
+        _data['descriptor'] = descriptor
+    if endpoint_type is not None:
+        _data['endpoint_type'] = endpoint_type
+    if invocation_path is not None:
+        _data['invocation_path'] = invocation_path
+    body = {'endpoint': _data}
+    body = simplejson.dumps(body)
+    return _create_req(method=tools.HTTP_POST, body=body, headers={'Content-Length': len(body),
+                                                                   'Content-Type': 'application/json'})
 
 
 @tools.catch_exception
-def update_endpoint(_id, port_mapping_template_id='', name='', endpoint_type='', invocation_path='',
-                    description='', descriptor=''):
-    url = '/%s?port_mapping_template_id=%s&name=%s&endpoint_type=%s&invocation_path=%s&description=%s&descriptor=%s' % \
-          (str(_id), str(port_mapping_template_id), str(name), str(endpoint_type), str(invocation_path),
-           str(description), str(descriptor))
-    return _create_req(method=tools.HTTP_POST, url=url)
+def update_endpoint(_id, port_mapping_template_id=None, name=None,
+                    description=None, descriptor=None,
+                    endpoint_type=None, invocation_path=None):
+    url = '/%s' % str(_id)
+    _data = {}
+    if port_mapping_template_id is not None:
+        _data['port_mapping_template_id'] = port_mapping_template_id
+    if name is not None:
+        _data['name'] = name
+    if description is not None:
+        _data['description'] = description
+    if descriptor is not None:
+        _data['descriptor'] = descriptor
+    if endpoint_type is not None:
+        _data['endpoint_type'] = endpoint_type
+    if invocation_path is not None:
+        _data['invocation_path'] = invocation_path
+    body = {'endpoint': _data}
+    body = simplejson.dumps(body)
+    return _create_req(method=tools.HTTP_POST, url=url, body=body, headers={'Content-Length': len(body),
+                                                                            'Content-Type': 'application/json'})
 
 
 @tools.catch_exception

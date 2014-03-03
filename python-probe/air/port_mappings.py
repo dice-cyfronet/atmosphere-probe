@@ -5,8 +5,8 @@ __author__ = 'paoolo'
 PREFIX = '/port_mappings'
 
 
-def _create_req(method=tools.HTTP_GET, url='', body=None):
-    return tools.create_req(method, PREFIX + url, body)
+def _create_req(method=tools.HTTP_GET, url='', body=None, headers=None):
+    return tools.create_req(method, PREFIX + url, body, headers)
 
 
 @tools.catch_exception
