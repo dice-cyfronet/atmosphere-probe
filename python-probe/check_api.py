@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import sys
 
 from air import appliance_sets, appliances, dev_mode_property_sets, port_mappings, endpoint
