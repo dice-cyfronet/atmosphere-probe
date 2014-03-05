@@ -12,12 +12,10 @@ def _create_req(method=tools.HTTP_GET, url='', body=None, headers=None):
     return tools.create_req(method, PREFIX + url, body, headers)
 
 
-@tools.catch_exception
 def get_all_app_set():
     return _create_req()
 
 
-@tools.catch_exception
 def get_app_set(_id):
     url = '/%s' % str(_id)
     return _create_req(url=url)
@@ -28,7 +26,6 @@ APP_SET_TYPE_PORTAL = 'portal'
 APP_SET_TYPE_WORKFLOW = 'workflow'
 
 
-@tools.catch_exception
 def create_app_set(name=None, priority=None, appliance_set_type=None):
     _data = {}
     if name is not None:
@@ -43,7 +40,6 @@ def create_app_set(name=None, priority=None, appliance_set_type=None):
                                                                    'Content-Type': 'application/json'})
 
 
-@tools.catch_exception
 def update_app_set(_id, name=None, priority=None):
     url = '/%s' % str(_id)
     _data = {'id': _id}
@@ -57,7 +53,6 @@ def update_app_set(_id, name=None, priority=None):
                                                                            'Content-Type': 'application/json'})
 
 
-@tools.catch_exception
 def delete_app_set(_id):
     url = '/%s' % str(_id)
     return _create_req(method=tools.HTTP_DELETE, url=url)
@@ -69,21 +64,26 @@ if __name__ == '__main__':
 
     app_set = create_app_set(appliance_set_type=APP_SET_TYPE_DEV)
 
+    if 'message' in app_set:
+        app_set = get_all_app_set()
+        delete_app_set(app_set['appliance_sets'][0]['id'])
+        app_set = create_app_set(appliance_set_type=APP_SET_TYPE_DEV)
+
     print app_set
     try:
-        __id = app_set['appliance_set']['id']
+        app_id = app_set['appliance_set']['id']
     except:
-        __id = 0
+        app_id = 0
 
     print '----'
 
     print get_all_app_set()
     print '----'
 
-    print get_app_set(__id)
+    print get_app_set(app_id)
     print '----'
 
-    print update_app_set(__id, name='name', priority=2)
+    print update_app_set(app_id, name='name', priority=2)
     print '----'
 
-    print delete_app_set(__id)
+    print delete_app_set(app_id)

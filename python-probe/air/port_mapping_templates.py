@@ -12,25 +12,23 @@ def _create_req(method=tools.HTTP_GET, url='', body=None, headers=None):
     return tools.create_req(method, PREFIX + url, body, headers)
 
 
-@tools.catch_exception
 def get_all_port_map_temp_by_at(appliance_type_id):
     url = '?appliance_type_id=%s' % str(appliance_type_id)
     return _create_req(url=url)
 
 
-@tools.catch_exception
-def get_all_port_map_temp_by_dev(dev_mode_property_set_id):
+def get_all_port_map_temp_by_dev(dev_mode_property_set_id, target_port=None):
     url = '?dev_mode_property_set_id=%s' % str(dev_mode_property_set_id)
+    if target_port is not None:
+        url += '&target_port=%s' % str(target_port)
     return _create_req(url=url)
 
 
-@tools.catch_exception
 def get_port_map_temp(_id):
     url = '/%s' % str(_id)
     return _create_req(url=url)
 
 
-@tools.catch_exception
 def create_port_map_temp_for_at(appliance_type_id,
                                 transport_protocol, application_protocol, service_name, target_port):
     body = {'port_mapping_template': {'appliance_type_id': appliance_type_id,
@@ -43,7 +41,6 @@ def create_port_map_temp_for_at(appliance_type_id,
                                                                    'Content-Type': 'application/json'})
 
 
-@tools.catch_exception
 def create_port_map_temp_for_dev(dev_mode_property_set_id,
                                  transport_protocol, application_protocol, service_name, target_port):
     body = {'port_mapping_template': {'dev_mode_property_set_id': dev_mode_property_set_id,
@@ -56,7 +53,6 @@ def create_port_map_temp_for_dev(dev_mode_property_set_id,
                                                                    'Content-Type': 'application/json'})
 
 
-@tools.catch_exception
 def update_port_map_temp(_id, appliance_type_id=None, dev_mode_property_set_id=None,
                          transport_protocol=None, application_protocol=None, service_name=None, target_port=None):
     url = '/%s' % str(_id)
@@ -79,7 +75,6 @@ def update_port_map_temp(_id, appliance_type_id=None, dev_mode_property_set_id=N
                                                                            'Content-Type': 'application/json'})
 
 
-@tools.catch_exception
 def delete_port_map_temp(_id):
     url = '/%s' % str(_id)
     return _create_req(method=tools.HTTP_DELETE, url=url)
@@ -103,29 +98,26 @@ if __name__ == '__main__':
     print _app
     print '----'
 
-    _dev_sets = dev_mode_property_sets.get_all_dev_mode_property_set()
+    _dev_sets = dev_mode_property_sets.get_all_dev_mode_property_set(_app['appliance']['id'])
     print _dev_sets
     print '----'
 
-    _dev_id = get_dev_id_for_app(_app['appliance']['id'], _dev_sets)
-    print _dev_id
-    print '----'
-
     try:
-        print get_all_port_map_temp_by_dev(_dev_id['id'])
+        print get_all_port_map_temp_by_dev(_dev_sets['dev_mode_property_sets'][0]['id'])
         print '----'
 
-        _port_mapping = create_port_map_temp_for_dev(_dev_id['id'], 'tcp', 'none', 'telnet', 25)
+        _port_mapping = create_port_map_temp_for_dev(_dev_sets['dev_mode_property_sets'][0]['id'], 'tcp', 'none',
+                                                     'telnet', 25)
         print _port_mapping
         print '----'
 
-        print get_all_port_map_temp_by_dev(_dev_id['id'])
+        print get_all_port_map_temp_by_dev(_dev_sets['dev_mode_property_sets'][0]['id'])
         print '----'
 
         print update_port_map_temp(_port_mapping['port_mapping_template']['id'], service_name='http', target_port=80)
         print '----'
 
-        print get_all_port_map_temp_by_dev(_dev_id['id'])
+        print get_all_port_map_temp_by_dev(_dev_sets['dev_mode_property_sets'][0]['id'])
         print '----'
 
         print delete_port_map_temp(_port_mapping['port_mapping_template']['id'])

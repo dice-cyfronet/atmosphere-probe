@@ -12,18 +12,15 @@ def _create_req(method=tools.HTTP_GET, url='', body=None, headers=None):
     return tools.create_req(method, PREFIX + url, body, headers)
 
 
-@tools.catch_exception
 def get_all_endpoints():
     return _create_req()
 
 
-@tools.catch_exception
 def get_endpoint(_id):
     url = '/%s' % str(_id)
     return _create_req(url=url)
 
 
-@tools.catch_exception
 def create_endpoint(port_mapping_template_id, name=None,
                     description=None, descriptor=None,
                     endpoint_type=None, invocation_path=None):
@@ -44,7 +41,6 @@ def create_endpoint(port_mapping_template_id, name=None,
                                                                    'Content-Type': 'application/json'})
 
 
-@tools.catch_exception
 def update_endpoint(_id, port_mapping_template_id=None, name=None,
                     description=None, descriptor=None,
                     endpoint_type=None, invocation_path=None):
@@ -68,13 +64,11 @@ def update_endpoint(_id, port_mapping_template_id=None, name=None,
                                                                             'Content-Type': 'application/json'})
 
 
-@tools.catch_exception
 def delete_endpoint(_id):
     url = '/%s' % str(_id)
     return _create_req(method=tools.HTTP_DELETE, url=url)
 
 
-@tools.catch_exception
 def get_endpoint_descriptor(_id):
     url = '/%s/descriptor' % str(_id)
     return _create_req(method=tools.HTTP_GET, url=url)

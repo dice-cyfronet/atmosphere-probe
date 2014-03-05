@@ -2,17 +2,17 @@ from air import tools
 
 __author__ = 'paoolo'
 
-PREFIX = '/'
+PREFIX = '/appliance_configuration_templates'
 
 
 def _create_req(method=tools.HTTP_GET, url='', body=None, headers=None):
     return tools.create_req(method, PREFIX + url, body, headers)
 
 
-def do_something():
+def get_all_app_config_temp():
     return _create_req()
 
 
 if __name__ == '__main__':
-    print do_something()
+    print get_all_app_config_temp()
     print '----'
