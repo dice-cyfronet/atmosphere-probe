@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
+import httplib
 import sys
 
-from air import appliance_sets, appliances, dev_mode_property_sets, port_mappings, endpoint
+import config
 
 
 __author__ = 'paoolo'
@@ -13,33 +14,23 @@ STATE_CRITICAL = 2
 STATE_UNKNOWN = 3
 
 if __name__ == '__main__':
-    exit_code = STATE_OK
+    exit_code = STATE_UNKNOWN
     exit_output = ''
 
-    _all_app_set = appliance_sets.get_all_app_set()
-    if 'message' in _all_app_set:
-        exit_output += '%s, ' % _all_app_set['message']
-        exit_code = STATE_WARNING
+    connection = httplib.HTTPConnection(config.API_URL)
+    connection.request('GET', '/users/sign_in')
+    response = connection.getresponse()
+    content = response.read()
 
-    _all_app = appliances.get_all_app()
-    if 'message' in _all_app:
-        exit_output += '%s, ' % _all_app['message']
+    _status = int(response.status)
+    _reason = str(response.reason)
+    exit_output = 'code: %d, reason: %s' % (_status, _reason)
+    if 100 <= _status < 300:
+        exit_code = STATE_OK
+    elif 300 <= _status < 400:
         exit_code = STATE_WARNING
-
-    _all_dev_prop = dev_mode_property_sets.get_all_dev_mode_property_set()
-    if 'message' in _all_dev_prop:
-        exit_output += '%s, ' % _all_dev_prop['message']
-        exit_code = STATE_WARNING
-
-    _all_end = endpoint.get_all_endpoints()
-    if 'message' in _all_end:
-        exit_output += '%s, ' % _all_end['message']
-        exit_code = STATE_WARNING
-
-    _all_port_map = port_mappings.get_all_port_mappings()
-    if 'message' in _all_port_map:
-        exit_output += '%s, ' % _all_port_map['message']
-        exit_code = STATE_WARNING
+    elif 400 <= _status < 600:
+        exit_code = STATE_CRITICAL
 
     if exit_code == STATE_OK:
         exit_output = 'OK: ' + exit_output
