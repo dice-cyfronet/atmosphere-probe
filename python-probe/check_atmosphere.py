@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
 import httplib
+import re
 import socket
 import time
-import traceback
 
 from air import appliance_sets, appliances, port_mapping_templates, dev_mode_property_sets, port_mappings, \
-    virtual_machines
+    virtual_machines, http_mappings
 import config
 
 
@@ -94,6 +94,9 @@ if __name__ == '__main__':
 
         port_mapping_temp = port_mapping_templates.create_port_map_temp_for_dev(
             dev_mode_prop_sets['dev_mode_property_sets'][0]['id'], 'tcp', 'none', 'http', 80)
+
+        time.sleep(SLEEP_TIME)
+
         if 'message' in port_mapping_temp:
             check_point('cannot create port mapping: %s\n' % str(port_mapping_temp['message']), STATE_CRITICAL, True)
 
@@ -113,8 +116,28 @@ if __name__ == '__main__':
         except socket.error as e:
             check_point('cannot connect to server: %s\n' % str(e), STATE_WARNING)
 
+        port_mapping_temp = port_mapping_templates.create_port_map_temp_for_dev(
+            dev_mode_prop_sets['dev_mode_property_sets'][0]['id'], 'tcp', 'http', 'http-2', 81)
+
+        time.sleep(SLEEP_TIME)
+
+        if 'message' in port_mapping_temp:
+            check_point('cannot create port mapping: %s\n' % str(port_mapping_temp['message']), STATE_CRITICAL, True)
+
+        port_mapping = http_mappings.get_all_http_map(app['appliance']['id'],
+                                                      port_mapping_temp['port_mapping_template']['id'])
+
+        url = re.sub('http://', '', port_mapping['http_mappings'][0]['url'])
+        connection = httplib.HTTPConnection(url)
+        try:
+            connection.request('GET', '/')
+            response = connection.getresponse()
+            content = response.read()
+            check_point('http-2: status: %d, reason: %s\n' % (int(response.status), str(response.reason)), STATE_OK)
+        except socket.error as e:
+            check_point('cannot connect to server: %s\n' % str(e), STATE_WARNING)
+
     except BaseException as e:
-        traceback.print_exc()
         check_point('error during executing script: %s\n' % str(e), STATE_UNKNOWN, True)
 
     check_point('done\n', STATE_OK, True)
