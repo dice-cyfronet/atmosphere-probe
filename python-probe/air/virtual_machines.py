@@ -11,7 +11,7 @@ def _create_req(method=tools.HTTP_GET, url='', body=None, headers=None):
 
 def get_all_virtual_machines(app_id=None):
     url = ''
-    if app_id is None:
+    if app_id is not None:
         url += 'appliance_id=%s' % str(app_id)
     if len(url) > 0:
         url = '?' + url
