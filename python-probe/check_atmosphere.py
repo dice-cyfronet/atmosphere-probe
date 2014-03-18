@@ -1,9 +1,10 @@
-#!/usr/bin/python
+# !/usr/bin/python
 
 import httplib
 import re
 import socket
 import time
+import pxssh
 
 from air import appliance_sets, appliances, port_mapping_templates, dev_mode_property_sets, port_mappings, \
     virtual_machines, http_mappings
@@ -41,7 +42,7 @@ def get_state(state):
 
 def check_point(_exit_output, _exit_status, _exit_now=False):
     check_point.exit_output += _exit_output
-    check_point.exit_state = max(_exit_status, check_point.exit_status)
+    check_point.exit_status = max(_exit_status, check_point.exit_status)
 
     if _exit_now:
         for hook in reversed(check_point.hooks):
@@ -50,8 +51,8 @@ def check_point(_exit_output, _exit_status, _exit_now=False):
             except BaseException as _e:
                 print 'hook error: %s' % str(_e)
 
-        print '%s: %s' % (get_state(check_point.exit_state), check_point.exit_output)
-        exit(check_point.exit_state)
+        print '%s: %s' % (get_state(check_point.exit_status), check_point.exit_output)
+        exit(check_point.exit_status)
 
 
 check_point.exit_output = ''
@@ -91,6 +92,27 @@ if __name__ == '__main__':
             check_point('delay vm start', STATE_WARNING)
 
         dev_mode_prop_sets = dev_mode_property_sets.get_all_dev_mode_property_set(app['appliance']['id'])
+
+        port_mapping_temp = port_mapping_templates.get_all_port_map_temp_by_dev(
+            dev_mode_prop_sets['dev_mode_property_sets'][0]['id'], 22)
+        port_mapping = port_mappings.get_all_port_mappings(port_mapping_temp['port_mapping_templates'][0]['id'])
+
+        try:
+            ssh = pxssh.pxssh()
+            ssh.login(port_mapping['port_mappings'][0]['public_ip'], 'root', 'password',
+                      port=int(port_mapping['port_mappings'][0]['source_port']))
+            ssh.sendline('wget -q -O - http://169.254.169.254/openstack/latest/user_data')
+            ssh.prompt()
+            output = re.split('\r\n', ssh.before)
+
+            if len(output) < 2 or len(output[1]) < 256:
+                check_point('cannot get mi_ticket from user_data: %s\n' % str(output[1]), STATE_WARNING, False)
+            else:
+                check_point('ssh: OK\nuser_data: %s...\n' % str(output[1][:64]), STATE_OK, False)
+
+            ssh.close()
+        except BaseException as e:
+            check_point('cannot login ssh to server: %s' % str(e), STATE_WARNING, False)
 
         port_mapping_temp = port_mapping_templates.create_port_map_temp_for_dev(
             dev_mode_prop_sets['dev_mode_property_sets'][0]['id'], 'tcp', 'none', 'http', 80)

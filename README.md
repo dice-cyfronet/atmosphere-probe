@@ -1,7 +1,7 @@
 Usage of python-probe
 =====================
 
-* Install `python-simplejson`
+* Install `python-simplejson` and `python-pexpect`
 * Copy scripts from `./python-probe/` to `/var/lib/nagios/nagios-probe/python-probe/`
 * Chmod scripts to `nagios:nagios`
 * Copy commands config from `./python-probe/air.cfg` to `/etc/nagios-plugins/config/air.cfg`
