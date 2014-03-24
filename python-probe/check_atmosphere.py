@@ -68,6 +68,13 @@ if __name__ == '__main__':
     delayed = False
 
     try:
+        app_set = appliance_sets.get_all_app_set()
+        if 'message' in app_set:
+            check_point('cannot get appliance set: %s\n' % app_set['message'], STATE_UNKNOWN, True)
+        if len(app_set['appliance_sets']) > 0:
+            check_point('old appliance set exist, remove it\n', STATE_WARNING, False)
+            appliance_sets.delete_app_set(app_set['appliance_sets'][0]['id'])
+
         app_set = appliance_sets.create_app_set(appliance_set_type=appliance_sets.APP_SET_TYPE_DEV)
         if 'message' in app_set:
             check_point('cannot create appliance set: %s\n' % app_set['message'], STATE_CRITICAL, True)
@@ -86,10 +93,10 @@ if __name__ == '__main__':
             exit_now = sleep_time > (2 * LIMIT_TIME)
 
         if not vm_active(app):
-            check_point('cannot start vm', STATE_CRITICAL, True)
+            check_point('cannot start vm\n', STATE_CRITICAL, True)
 
         if delayed:
-            check_point('delay vm start', STATE_WARNING)
+            check_point('delay vm start\n', STATE_WARNING)
 
         dev_mode_prop_sets = dev_mode_property_sets.get_all_dev_mode_property_set(app['appliance']['id'])
 
@@ -112,7 +119,7 @@ if __name__ == '__main__':
 
             ssh.close()
         except BaseException as e:
-            check_point('cannot login ssh to server: %s' % str(e), STATE_WARNING, False)
+            check_point('cannot login ssh to server: %s\n' % str(e), STATE_WARNING, False)
 
         port_mapping_temp = port_mapping_templates.create_port_map_temp_for_dev(
             dev_mode_prop_sets['dev_mode_property_sets'][0]['id'], 'tcp', 'none', 'http', 80)
