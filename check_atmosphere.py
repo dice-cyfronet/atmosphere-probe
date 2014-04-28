@@ -4,10 +4,11 @@ import httplib
 import re
 import socket
 import time
-import pxssh
 
 from air import appliance_sets, appliances, port_mapping_templates, dev_mode_property_sets, port_mappings, \
     virtual_machines, http_mappings
+
+import pxssh
 import config
 
 
