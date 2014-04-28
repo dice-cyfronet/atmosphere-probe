@@ -5,11 +5,16 @@ import re
 import socket
 import time
 
-from air import appliance_sets, appliances, port_mapping_templates, dev_mode_property_sets, port_mappings, \
-    virtual_machines, http_mappings
-
 import pxssh
-import config
+import air.config
+
+
+air.config.add_config_ini('main.ini', 'secure.ini')
+
+from air.property import dev_mode_property_sets
+from air.appliance import appliance_sets, appliances
+from air.mapping import port_mapping_templates, port_mappings, http_mappings
+from air.machine import virtual_machines
 
 
 __author__ = 'paoolo'
@@ -81,7 +86,7 @@ if __name__ == '__main__':
             check_point('cannot create appliance set: %s\n' % app_set['message'], STATE_CRITICAL, True)
         check_point.hooks.append(lambda: appliance_sets.delete_app_set(app_set['appliance_set']['id']))
 
-        app = appliances.create_app(app_set['appliance_set']['id'], config.CONF_AT_ID)
+        app = appliances.create_app(app_set['appliance_set']['id'], air.config.CONF_AT_ID)
         if 'message' in app:
             check_point('cannot create appliance: %s\n' % app['message'], STATE_CRITICAL, True)
         check_point.hooks.append(lambda: appliances.delete_app(app['appliance']['id']))

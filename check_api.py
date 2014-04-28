@@ -1,10 +1,12 @@
-#!/usr/bin/python
+# !/usr/bin/python
 
 import httplib
 import sys
 
-import config
+import air.config
 
+
+air.config.add_config_ini('main.ini')
 
 __author__ = 'paoolo'
 
@@ -17,7 +19,7 @@ if __name__ == '__main__':
     exit_code = STATE_UNKNOWN
     exit_output = ''
 
-    connection = httplib.HTTPConnection(config.API_URL)
+    connection = httplib.HTTPConnection(air.config.API_URL)
     connection.request('GET', '/users/sign_in')
     response = connection.getresponse()
     content = response.read()
