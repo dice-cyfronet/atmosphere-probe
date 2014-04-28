@@ -38,7 +38,8 @@ ${virtenv_dir}/enviroment/bin/python setup.py install
 popd
 
 # GIT_SSL_NO_VERIFY=true git clone https://github.com/pexpect/pexpect.git ${virtenv_dir}/pexpect
-wget -O ${virtenv_dir}/pexpect.zip -d ${virtenv_dir}/
+wget -O ${virtenv_dir}/pexpect.zip --no-check-certificate https://github.com/pexpect/pexpect/archive/master.zip
+unzip ${virtenv_dir}/pexpect.zip -d ${virtenv_dir}/
 pushd ${virtenv_dir}/pexpect-master
 ${virtenv_dir}/enviroment/bin/python setup.py install
 popd
