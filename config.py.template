@@ -1,8 +1,0 @@
-# Please fill API_PRIVATE_TOKEN with proper value and save this file as config.py
-
-API_URL = 'vph.cyfronet.pl'
-API_PREFIX = '/api/v1'
-API_PRIVATE_TOKEN = ''
-
-VM_IP = 'vph.cyfronet.pl'
-CONF_AT_ID = 371
