@@ -25,20 +25,20 @@ python ${virtenv_dir}/virtualenv.py ${virtenv_dir}/enviroment --no-setuptools
 
 # GIT_SSL_NO_VERIFY=true git clone https://github.com/simplejson/simplejson.git ${virtenv_dir}/simplejson
 wget -O ${virtenv_dir}/simplejson.zip --no-check-certificate https://github.com/simplejson/simplejson/archive/master.zip
-unzip ${virtenv_dir}/simplejson.zip -d ${virtenv_dir}/simplejson
-pushd ${virtenv_dir}/simplejson
+unzip ${virtenv_dir}/simplejson.zip
+pushd ${virtenv_dir}/simplejson-master
 ${virtenv_dir}/enviroment/bin/python setup.py install
 popd
 
 # GIT_SSL_NO_VERIFY=true git clone https://gitlab.dev.cyfronet.pl/paoolo/air-python.git ${virtenv_dir}/air-python
 wget -O ${virtenv_dir}/air-python.zip --no-check-certificate https://gitlab.dev.cyfronet.pl/paoolo/air-python/repository/archive.zip
-unzip ${virtenv_dir}/air-python.zip -d ${virtenv_dir}/air-python
-pushd ${virtenv_dir}/air-python
+unzip ${virtenv_dir}/air-python.zip
+pushd ${virtenv_dir}/air-python.git
 ${virtenv_dir}/enviroment/bin/python setup.py install
 popd
 
 # GIT_SSL_NO_VERIFY=true git clone https://github.com/pexpect/pexpect.git ${virtenv_dir}/pexpect
-wget -O ${virtenv_dir}/pexpect.zip -d ${virtenv_dir}/pexpect
-pushd ${virtenv_dir}/pexpect
+wget -O ${virtenv_dir}/pexpect.zip
+pushd ${virtenv_dir}/pexpect-master
 ${virtenv_dir}/enviroment/bin/python setup.py install
 popd
