@@ -1,12 +1,14 @@
 # !/usr/bin/python
 
 import httplib
+import os
 import sys
 
 import air.config
 
 
-air.config.add_config_ini('main.ini')
+pwd = os.path.dirname(os.path.abspath(__file__))
+air.config.add_config_ini('%s/main.ini' % pwd)
 
 __author__ = 'paoolo'
 

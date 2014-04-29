@@ -1,6 +1,7 @@
 # !/usr/bin/python
 
 import httplib
+import os
 import re
 import socket
 import time
@@ -9,7 +10,8 @@ import pxssh
 import air.config
 
 
-air.config.add_config_ini('main.ini', 'secure.ini')
+pwd = os.path.dirname(os.path.abspath(__file__))
+air.config.add_config_ini('%s/main.ini' % pwd, '%s/secure.ini' % pwd)
 
 from air.property import dev_mode_property_sets
 from air.appliance import appliance_sets, appliances
