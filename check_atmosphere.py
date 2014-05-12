@@ -69,7 +69,7 @@ check_point.hooks = []
 
 if __name__ == '__main__':
 
-    exit_output = 'UNKNOWN:'
+    exit_output = ''
     exit_status = STATE_OK
     exit_now = False
 
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     try:
         app_set = appliance_sets.get_all_app_set()
         if 'message' in app_set:
-            check_point('cannot get appliance set: %s\n' % app_set['message'], STATE_UNKNOWN, True)
+            check_point('cannot get appliance set: %s\n' % app_set['message'], STATE_CRITICAL, True)
         if len(app_set['appliance_sets']) > 0:
             check_point('old appliance set exist, remove it\n', STATE_WARNING, False)
             appliance_sets.delete_app_set(app_set['appliance_sets'][0]['id'])
@@ -175,6 +175,6 @@ if __name__ == '__main__':
             check_point('cannot connect to server: %s\n' % str(e), STATE_WARNING)
 
     except BaseException as e:
-        check_point('error during executing script: %s\n' % str(e), STATE_UNKNOWN, True)
+        check_point('error during executing script: %s\n' % str(e), STATE_CRITICAL, True)
 
     check_point('done\n', STATE_OK, True)
