@@ -78,19 +78,19 @@ if __name__ == '__main__':
     try:
         app_set = appliance_sets.get_all_app_set()
         if 'message' in app_set:
-            check_point('cannot get appliance set: %s\n' % app_set['message'], STATE_CRITICAL, True)
+            check_point('cannot get appliance set: %s; ' % app_set['message'], STATE_CRITICAL, True)
         if len(app_set['appliance_sets']) > 0:
-            check_point('old appliance set exist, remove it\n', STATE_WARNING, False)
+            check_point('old appliance set exist, remove it; ', STATE_WARNING, False)
             appliance_sets.delete_app_set(app_set['appliance_sets'][0]['id'])
 
         app_set = appliance_sets.create_app_set(appliance_set_type=appliance_sets.APP_SET_TYPE_DEV)
         if 'message' in app_set:
-            check_point('cannot create appliance set: %s\n' % app_set['message'], STATE_CRITICAL, True)
+            check_point('cannot create appliance set: %s; ' % app_set['message'], STATE_CRITICAL, True)
         check_point.hooks.append(lambda: appliance_sets.delete_app_set(app_set['appliance_set']['id']))
 
         app = appliances.create_app(app_set['appliance_set']['id'], air.config.CONF_AT_ID)
         if 'message' in app:
-            check_point('cannot create appliance: %s\n' % app['message'], STATE_CRITICAL, True)
+            check_point('cannot create appliance: %s; ' % app['message'], STATE_CRITICAL, True)
         check_point.hooks.append(lambda: appliances.delete_app(app['appliance']['id']))
 
         sleep_time = 0
@@ -101,10 +101,10 @@ if __name__ == '__main__':
             exit_now = sleep_time > (2 * LIMIT_TIME)
 
         if not vm_active(app):
-            check_point('cannot start vm\n', STATE_CRITICAL, True)
+            check_point('cannot start vm; ', STATE_CRITICAL, True)
 
         if delayed:
-            check_point('delay vm start\n', STATE_WARNING)
+            check_point('delay vm start; ', STATE_WARNING)
 
         dev_mode_prop_sets = dev_mode_property_sets.get_all_dev_mode_property_set(app['appliance']['id'])
 
@@ -121,13 +121,13 @@ if __name__ == '__main__':
             output = re.split('\r\n', ssh.before)
 
             if len(output) < 2 or len(output[1]) < 256:
-                check_point('cannot get mi_ticket from user_data: %s\n' % str(output[1]), STATE_WARNING, False)
+                check_point('cannot get mi_ticket from user_data: %s; ' % str(output[1]), STATE_WARNING, False)
             else:
-                check_point('ssh: OK\nuser_data: %s...\n' % str(output[1][:64]), STATE_OK, False)
+                check_point('ssh: OK; user_data: %s...; ' % str(output[1][:64]), STATE_OK, False)
 
             ssh.close()
         except BaseException as e:
-            check_point('cannot login ssh to server: %s\n' % str(e), STATE_WARNING, False)
+            check_point('cannot login ssh to server: %s; ' % str(e), STATE_WARNING, False)
 
         port_mapping_temp = port_mapping_templates.create_port_map_temp_for_dev(
             dev_mode_prop_sets['dev_mode_property_sets'][0]['id'], 'tcp', 'none', 'http', 80)
@@ -135,7 +135,7 @@ if __name__ == '__main__':
         time.sleep(SLEEP_TIME)
 
         if 'message' in port_mapping_temp:
-            check_point('cannot create port mapping: %s\n' % str(port_mapping_temp['message']), STATE_CRITICAL, True)
+            check_point('cannot create port mapping: %s; ' % str(port_mapping_temp['message']), STATE_CRITICAL, True)
 
         if 'port_mapping_templates' not in port_mapping_temp:
             port_mapping_temp = port_mapping_templates.get_all_port_map_temp_by_dev(
@@ -149,9 +149,9 @@ if __name__ == '__main__':
             connection.request('GET', '/')
             response = connection.getresponse()
             content = response.read()
-            check_point('http: status: %d, reason: %s\n' % (int(response.status), str(response.reason)), STATE_OK)
+            check_point('http: status: %d, reason: %s; ' % (int(response.status), str(response.reason)), STATE_OK)
         except socket.error as e:
-            check_point('cannot connect to server: %s\n' % str(e), STATE_WARNING)
+            check_point('cannot connect to server: %s; ' % str(e), STATE_WARNING)
 
         port_mapping_temp = port_mapping_templates.create_port_map_temp_for_dev(
             dev_mode_prop_sets['dev_mode_property_sets'][0]['id'], 'tcp', 'http', 'http-2', 81)
@@ -159,7 +159,7 @@ if __name__ == '__main__':
         time.sleep(SLEEP_TIME)
 
         if 'message' in port_mapping_temp:
-            check_point('cannot create port mapping: %s\n' % str(port_mapping_temp['message']), STATE_CRITICAL, True)
+            check_point('cannot create port mapping: %s; ' % str(port_mapping_temp['message']), STATE_CRITICAL, True)
 
         port_mapping = http_mappings.get_all_http_map(app['appliance']['id'],
                                                       port_mapping_temp['port_mapping_template']['id'])
@@ -170,11 +170,11 @@ if __name__ == '__main__':
             connection.request('GET', '/')
             response = connection.getresponse()
             content = response.read()
-            check_point('http-2: status: %d, reason: %s\n' % (int(response.status), str(response.reason)), STATE_OK)
+            check_point('http-2: status: %d, reason: %s; ' % (int(response.status), str(response.reason)), STATE_OK)
         except socket.error as e:
-            check_point('cannot connect to server: %s\n' % str(e), STATE_WARNING)
+            check_point('cannot connect to server: %s; ' % str(e), STATE_WARNING)
 
     except BaseException as e:
-        check_point('error during executing script: %s\n' % str(e), STATE_CRITICAL, True)
+        check_point('error during executing script: %s; ' % str(e), STATE_CRITICAL, True)
 
-    check_point('done\n', STATE_OK, True)
+    check_point('done; ', STATE_OK, True)
