@@ -1,5 +1,3 @@
-# !/usr/bin/python
-
 import httplib
 import os
 import sys

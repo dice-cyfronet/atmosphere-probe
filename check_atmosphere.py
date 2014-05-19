@@ -1,10 +1,9 @@
-# !/usr/bin/python
-
 import httplib
 import os
 import re
 import socket
 import time
+import sys
 
 import pxssh
 import air.config
@@ -60,7 +59,7 @@ def check_point(_exit_output, _exit_status, _exit_now=False):
                 print 'hook error: %s' % str(_e)
 
         print '%s: %s' % (get_state(check_point.exit_status), check_point.exit_output)
-        exit(check_point.exit_status)
+        sys.exit(check_point.exit_status)
 
 
 check_point.exit_output = ''
@@ -173,6 +172,9 @@ if __name__ == '__main__':
             check_point('http-2: status: %d, reason: %s; ' % (int(response.status), str(response.reason)), STATE_OK)
         except socket.error as e:
             check_point('cannot connect to server: %s; ' % str(e), STATE_WARNING)
+
+    except SystemExit as e:
+        raise e
 
     except BaseException as e:
         check_point('error during executing script: %s; ' % str(e), STATE_CRITICAL, True)
