@@ -82,10 +82,16 @@ if __name__ == '__main__':
             check_point('old appliance set exist, remove it; ', STATE_WARNING, False)
             appliance_sets.delete_app_set(app_set['appliance_sets'][0]['id'])
 
+        # wait until old appliance set is remove
+        time.sleep(SLEEP_TIME)
+
         app_set = appliance_sets.create_app_set(appliance_set_type=appliance_sets.APP_SET_TYPE_DEV)
         if 'message' in app_set:
             check_point('cannot create appliance set: %s; ' % app_set['message'], STATE_CRITICAL, True)
         check_point.hooks.append(lambda: appliance_sets.delete_app_set(app_set['appliance_set']['id']))
+
+        # wait until new appliance set is created
+        time.sleep(SLEEP_TIME)
 
         app = appliances.create_app(app_set['appliance_set']['id'], air.config.CONF_AT_ID)
         if 'message' in app:
