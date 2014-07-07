@@ -132,6 +132,7 @@ if __name__ == '__main__':
             output = ''
             for line in stdout.readlines():
                 output += line
+                break
 
             if len(output) < 256:
                 check_point('cannot get mi_ticket from user_data: %s; ' % str(output), STATE_WARNING, False)
