@@ -23,23 +23,35 @@ curl -L -o ${virtenv_dir}/virtualenv.py https://raw.githubusercontent.com/pypa/v
 python ${virtenv_dir}/virtualenv.py ${virtenv_dir}/enviroment --no-setuptools
 . ${virtenv_dir}/enviroment/bin/activate
 
-# GIT_SSL_NO_VERIFY=true git clone https://github.com/simplejson/simplejson.git ${virtenv_dir}/simplejson
 wget -O ${virtenv_dir}/simplejson.zip --no-check-certificate https://github.com/simplejson/simplejson/archive/master.zip
 unzip ${virtenv_dir}/simplejson.zip -d ${virtenv_dir}/
 pushd ${virtenv_dir}/simplejson-master
 ${virtenv_dir}/enviroment/bin/python setup.py install
 popd
 
-# GIT_SSL_NO_VERIFY=true git clone https://gitlab.dev.cyfronet.pl/paoolo/air-python.git ${virtenv_dir}/air-python
 wget -O ${virtenv_dir}/air-python.zip --no-check-certificate https://gitlab.dev.cyfronet.pl/paoolo/air-python/repository/archive.zip
 unzip ${virtenv_dir}/air-python.zip -d ${virtenv_dir}/
 pushd ${virtenv_dir}/air-python.git
 ${virtenv_dir}/enviroment/bin/python setup.py install
 popd
 
-# GIT_SSL_NO_VERIFY=true git clone https://github.com/pexpect/pexpect.git ${virtenv_dir}/pexpect
-wget -O ${virtenv_dir}/pexpect.zip --no-check-certificate https://github.com/pexpect/pexpect/archive/master.zip
-unzip ${virtenv_dir}/pexpect.zip -d ${virtenv_dir}/
-pushd ${virtenv_dir}/pexpect-master
+wget -O ${virtenv_dir}/paramiko.zip --no-check-certificate https://github.com/paramiko/paramiko/archive/master.zip
+unzip ${virtenv_dir}/paramiko.zip -d ${virtenv_dir}/
+pushd ${virtenv_dir}/paramiko-master
 ${virtenv_dir}/enviroment/bin/python setup.py install
 popd
+
+wget -O ${virtenv_dir}/ecdsa.zip --no-check-certificate https://github.com/warner/python-ecdsa/archive/master.zip
+unzip ${virtenv_dir}/ecdsa.zip -d ${virtenv_dir}/
+pushd ${virtenv_dir}/python-ecdsa-master
+${virtenv_dir}/enviroment/bin/python setup.py install
+popd
+
+wget -O ${virtenv_dir}/crypto.tar.gz --no-check-certificate https://pypi.python.org/packages/source/p/pycrypto/pycrypto-2.6.1.tar.gz
+pushd ${virtenv_dir}
+tar zxvf ${virtenv_dir}/crypto.tar.gz
+pushd ${virtenv_dir}/pycrypto-2.6.1
+${virtenv_dir}/enviroment/bin/python setup.py install
+popd
+popd
+

@@ -1,11 +1,11 @@
 import httplib
-import os
-import re
 import socket
 import time
 import sys
 
-import pxssh
+import os
+import re
+import paramiko
 import air.config
 
 
@@ -118,17 +118,25 @@ if __name__ == '__main__':
         port_mapping = port_mappings.get_all_port_mappings(port_mapping_temp['port_mapping_templates'][0]['id'])
 
         try:
-            ssh = pxssh.pxssh()
-            ssh.login(port_mapping['port_mappings'][0]['public_ip'], 'root', 'password',
-                      port=int(port_mapping['port_mappings'][0]['source_port']))
-            ssh.sendline('wget -q -O - http://169.254.169.254/openstack/latest/user_data')
-            ssh.prompt()
-            output = re.split('\r\n', ssh.before)
+            ssh = paramiko.SSHClient()
 
-            if len(output) < 2 or len(output[1]) < 256:
-                check_point('cannot get mi_ticket from user_data: %s; ' % str(output[1]), STATE_WARNING, False)
+            ssh.load_system_host_keys()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+            ssh.connect(port_mapping['port_mappings'][0]['public_ip'],
+                        int(port_mapping['port_mappings'][0]['source_port']),
+                        'root', 'password')
+
+            (stdin, stdout, stderr) = ssh.exec_command('wget -q -O - http://169.254.169.254/openstack/latest/user_data')
+
+            output = ''
+            for line in stdout.readlines():
+                output += line
+
+            if len(output) < 256:
+                check_point('cannot get mi_ticket from user_data: %s; ' % str(output), STATE_WARNING, False)
             else:
-                check_point('ssh: OK; user_data: %s...; ' % str(output[1][:64]), STATE_OK, False)
+                check_point('ssh: OK; user_data: %s...; ' % str(output[:64]), STATE_OK, False)
 
             ssh.close()
         except BaseException as e:
