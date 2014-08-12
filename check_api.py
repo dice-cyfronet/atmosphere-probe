@@ -1,7 +1,7 @@
 import httplib
-import os
 import sys
 
+import os
 import air.config
 
 
@@ -19,7 +19,11 @@ if __name__ == '__main__':
     exit_code = STATE_UNKNOWN
     exit_output = ''
 
-    connection = httplib.HTTPConnection(air.config.API_URL)
+    if air.config.HTTPS == 'True':
+        connection = httplib.HTTPSConnection(air.config.API_URL)
+    else:
+        connection = httplib.HTTPConnection(air.config.API_URL)
+
     connection.request('GET', '/users/sign_in')
     response = connection.getresponse()
     content = response.read()
