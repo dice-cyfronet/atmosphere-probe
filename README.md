@@ -1,4 +1,4 @@
-Usage of python-probe
+Usage of nagios-probe
 =====================
 
 * Clone this project
