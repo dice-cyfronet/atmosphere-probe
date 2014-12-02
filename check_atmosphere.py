@@ -20,8 +20,8 @@ from air.machine import virtual_machines
 
 __author__ = 'paoolo'
 
-SLEEP_TIME = 5
-LIMIT_TIME = 300
+SLEEP_TIME = 15
+LIMIT_TIME = 600
 
 STATE_OK = 0
 STATE_WARNING = 1
