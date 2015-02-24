@@ -10,7 +10,7 @@ import atmosphere.config
 
 
 pwd = os.path.dirname(os.path.abspath(__file__))
-atmosphere.config.add_config_ini('%s/main.ini' % pwd, '%s/secure.ini' % pwd)
+atmosphere.config.add_config_ini('%s/../etc/main.ini' % pwd, '%s/../etc/secure.ini' % pwd)
 
 from atmosphere.property import dev_mode_property_sets
 from atmosphere.appliance import appliance_sets, appliances
