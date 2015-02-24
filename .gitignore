@@ -15,4 +15,4 @@ etc/secure.ini
 *.pyo
 *.po
 
-virtenv/
+__envi/
