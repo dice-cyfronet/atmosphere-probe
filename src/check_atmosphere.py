@@ -6,16 +6,16 @@ import sys
 import os
 import re
 import paramiko
-import air.config
+import atmosphere.config
 
 
 pwd = os.path.dirname(os.path.abspath(__file__))
-air.config.add_config_ini('%s/main.ini' % pwd, '%s/secure.ini' % pwd)
+atmosphere.config.add_config_ini('%s/main.ini' % pwd, '%s/secure.ini' % pwd)
 
-from air.property import dev_mode_property_sets
-from air.appliance import appliance_sets, appliances
-from air.mapping import port_mapping_templates, port_mappings, http_mappings
-from air.machine import virtual_machines
+from atmosphere.property import dev_mode_property_sets
+from atmosphere.appliance import appliance_sets, appliances
+from atmosphere.mapping import port_mapping_templates, port_mappings, http_mappings
+from atmosphere.machine import virtual_machines
 
 
 __author__ = 'paoolo'
@@ -93,7 +93,7 @@ if __name__ == '__main__':
         # wait until new appliance set is created
         time.sleep(SLEEP_TIME)
 
-        app = appliances.create_app(app_set['appliance_set']['id'], air.config.CONF_AT_ID)
+        app = appliances.create_app(app_set['appliance_set']['id'], atmosphere.config.CONF_AT_ID)
         if 'message' in app:
             check_point('cannot create appliance: %s; ' % app['message'], STATE_CRITICAL, True)
         check_point.hooks.append(lambda: appliances.delete_app(app['appliance']['id']))

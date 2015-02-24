@@ -1,0 +1,5 @@
+simplejson
+atmosphere-python-client
+paramiko
+ecdsa
+crypto

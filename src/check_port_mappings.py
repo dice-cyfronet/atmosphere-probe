@@ -1,10 +1,10 @@
 import os
-import air.config
+import atmosphere.config
 
 pwd = os.path.dirname(os.path.abspath(__file__))
-air.config.add_config_ini('%s/main.ini' % pwd, '%s/secure.ini' % pwd)
+atmosphere.config.add_config_ini('%s/main.ini' % pwd, '%s/secure.ini' % pwd)
 
-from air.mapping import port_mappings
+from atmosphere.mapping import port_mappings
 
 __author__ = 'paoolo'
 

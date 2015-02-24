@@ -2,11 +2,11 @@ import httplib
 import sys
 
 import os
-import air.config
+import atmosphere.config
 
 
 pwd = os.path.dirname(os.path.abspath(__file__))
-air.config.add_config_ini('%s/main.ini' % pwd)
+atmosphere.config.add_config_ini('%s/../etc/main.ini' % pwd)
 
 __author__ = 'paoolo'
 
@@ -19,10 +19,10 @@ if __name__ == '__main__':
     exit_code = STATE_UNKNOWN
     exit_output = ''
 
-    if air.config.HTTPS == 'True':
-        connection = httplib.HTTPSConnection(air.config.API_URL)
+    if atmosphere.config.HTTPS == 'True':
+        connection = httplib.HTTPSConnection(atmosphere.config.API_URL)
     else:
-        connection = httplib.HTTPConnection(air.config.API_URL)
+        connection = httplib.HTTPConnection(atmosphere.config.API_URL)
 
     connection.request('GET', '/users/sign_in')
     response = connection.getresponse()

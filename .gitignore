@@ -8,7 +8,7 @@ build/
 dist/
 out/
 
-secure.ini
+etc/secure.ini
 
 *.tar
 *.pyc
