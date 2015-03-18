@@ -156,7 +156,7 @@ if __name__ == '__main__':
             port_mapping_temp = port_mapping_templates.get_all_port_map_temp_by_dev(
                 dev_mode_prop_sets['dev_mode_property_sets'][0]['id'], 80)
 
-        port_mapping = port_mappings.get_all_port_mappings(port_mapping_temp['port_mapping_templates'][0]['id'])
+        port_mapping = port_mappings.get_all_port_mappings(False, port_mapping_temp['port_mapping_templates'][0]['id'])
 
         connection = httplib.HTTPConnection(port_mapping['port_mappings'][0]['public_ip'],
                                             port_mapping['port_mappings'][0]['source_port'])
