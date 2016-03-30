@@ -25,7 +25,7 @@ then
     read -p "Enter proxy certificate path: " proxy_path
     read -p "Enter configuration appliance template ID (like: 371): " conf_at_id
     set -x
-    sed -i "s/X509_PROXY_FILE = proxypath/X509_PROXY_FILE = ${proxy_path}/g" ${__dir}/etc/secure.ini
+    sed -i "s/X509_PROXY_FILE = proxy_path/X509_PROXY_FILE = ${proxy_path}/g" ${__dir}/etc/secure.ini
     sed -i "s/CONF_AT_ID = id/CONF_AT_ID = ${conf_at_id}/g" ${__dir}/etc/secure.ini
 fi
 
