@@ -1,5 +1,5 @@
 simplejson
-atmosphere-python-client
+-e git://github.com/dice-cyfronet/atmosphere-python-client.git#egg=atmosphere-python-client
 paramiko
 ecdsa
 crypto
