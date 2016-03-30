@@ -22,10 +22,10 @@ then
     echo the file does not exist
     cp ${__dir}/etc/secure-example.ini ${__dir}/etc/secure.ini
     set +x
-    read -p "Enter private token: " token
+    read -p "Enter proxy certificate path: " proxy_path
     read -p "Enter configuration appliance template ID (like: 371): " conf_at_id
     set -x
-    sed -i "s/API_PRIVATE_TOKEN = token/API_PRIVATE_TOKEN = ${token}/g" ${__dir}/etc/secure.ini
+    sed -i "s/X509_PROXY_FILE = proxypath/X509_PROXY_FILE = ${proxy_path}/g" ${__dir}/etc/secure.ini
     sed -i "s/CONF_AT_ID = id/CONF_AT_ID = ${conf_at_id}/g" ${__dir}/etc/secure.ini
 fi
 
