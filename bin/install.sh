@@ -28,3 +28,4 @@ then
     sed -i "s/API_PRIVATE_TOKEN = token/API_PRIVATE_TOKEN = ${token}/g" ${__dir}/etc/secure.ini
     sed -i "s/CONF_AT_ID = id/CONF_AT_ID = ${conf_at_id}/g" ${__dir}/etc/secure.ini
 fi
+
